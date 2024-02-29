@@ -22,7 +22,7 @@ class UserImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: isAdded ? 3.w : 6.w),
+      padding: EdgeInsets.only(right: isAdded ?  14.w : 13.w),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
         decoration: BoxDecoration(
