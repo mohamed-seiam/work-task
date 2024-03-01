@@ -55,7 +55,8 @@ class _UsersListViewState extends State<UsersListView> {
             current is FetchUsersLoadingFromPagination ||
             current is ClearSearchingList ||
             current is SearchUserSuccess ||
-            current is EmptyResultSearchList;
+            current is EmptyResultSearchList ||
+            current is FetchUsersFailure;
       },
       listener: (context, state) {
         // final cubit = context.read<HomeCubit>();

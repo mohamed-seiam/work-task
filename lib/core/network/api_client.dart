@@ -12,11 +12,11 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio();
     _dio.options.baseUrl = ApiConstants.apiBaseUrl;
-    _dio.options.connectTimeout = const Duration(seconds: 6);
-    _dio.options.receiveTimeout = const Duration(seconds: 8);
+    _dio.options.connectTimeout = const Duration(seconds: 10);
+    _dio.options.receiveTimeout = const Duration(seconds: 10);
   }
 
-  Future<Map<String, dynamic>> getUsers({int skip = 10}) async {
+  Future<Map<String, dynamic>> getUsers({int skip = 0}) async {
     final response = await _dio.get(ApiConstants.usersEndPoint,
         queryParameters: {'limit': 10, 'skip': skip});
     return response.data;

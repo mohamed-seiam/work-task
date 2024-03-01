@@ -20,33 +20,38 @@ class HomeView extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: 16.w,
           ).copyWith(top: 30.h),
-          child: Column(
-            children: [
-             const GroupListViewWidget(),
-              verticalSpacing(16),
-              Divider(
-                color: AppColors.lightGrey,
-                thickness: 1.h,
-              ),
-              verticalSpacing(16),
-              const TextFormSearchWidget(),
-              verticalSpacing(16),
-              const UsersListView(),
-              BlocBuilder<HomeCubit, HomeState>(
-                builder: (context, state) {
-                  if (state is FetchUsersLoadingFromPagination) {
-                    return Padding(
-                      padding:  EdgeInsets.symmetric(vertical: 8.0.h),
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
-            ],
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await context.read<HomeCubit>().fetchUsers();
+            },
+            child: Column(
+              children: [
+               const GroupListViewWidget(),
+                verticalSpacing(16),
+                Divider(
+                  color: AppColors.lightGrey,
+                  thickness: 1.h,
+                ),
+                verticalSpacing(16),
+                const TextFormSearchWidget(),
+                verticalSpacing(16),
+                const UsersListView(),
+                BlocBuilder<HomeCubit, HomeState>(
+                  builder: (context, state) {
+                    if (state is FetchUsersLoadingFromPagination) {
+                      return Padding(
+                        padding:  EdgeInsets.symmetric(vertical: 8.0.h),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

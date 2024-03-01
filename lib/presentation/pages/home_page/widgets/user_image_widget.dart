@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,7 +23,7 @@ class UserImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: isAdded ?  14.w : 13.w),
+      padding: EdgeInsets.only(right: isAdded ? 14.w : 13.w),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
         decoration: BoxDecoration(
@@ -31,7 +32,8 @@ class UserImageWidget extends StatelessWidget {
           borderRadius: isAdded ? null : BorderRadius.circular(16),
           border: isAdded
               ? GradientBoxBorder(
-                  gradient: LinearGradient(colors: colors ?? [Colors.white,Colors.white]),
+                  gradient: LinearGradient(
+                      colors: colors ?? [Colors.white, Colors.white]),
                   width: 2)
               : const GradientBoxBorder(
                   gradient: LinearGradient(colors: AppColors.linearColors),
@@ -51,10 +53,15 @@ class UserImageWidget extends StatelessWidget {
             shape: isAdded ? BoxShape.circle : BoxShape.rectangle,
             borderRadius: isAdded ? null : BorderRadius.circular(14),
           ),
-          child: userEntity!=null ?Image.network(
-            userEntity?.image ?? '',
-            fit: BoxFit.cover,
-          ):SvgPicture.asset(AssetsManager.personIcon),
+          child: userEntity != null
+              ? CachedNetworkImage(
+                  imageUrl: userEntity?.image ?? '',
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                )
+              : SvgPicture.asset(AssetsManager.personIcon),
         ),
       ),
     );
