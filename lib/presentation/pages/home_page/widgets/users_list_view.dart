@@ -90,7 +90,7 @@ class _UsersListViewState extends State<UsersListView> {
               physics: const BouncingScrollPhysics(),
               itemCount: 10,
               itemBuilder: (context, index) {
-                return const UserInformationShimmerWidget();
+                return const UserInformationShimmerWidget(isInList: false,);
               },
             ),
           );
@@ -104,6 +104,6 @@ class _UsersListViewState extends State<UsersListView> {
       _scrollController
           .jumpTo(_scrollController.position.maxScrollExtent);
     });
-    return const UserInformationShimmerWidget();
+    return const UserInformationShimmerWidget(isInList: true,);
   }
 }

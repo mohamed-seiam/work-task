@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:work_task/core/theme/app_colors.dart';
 
 class UserInformationShimmerWidget extends StatelessWidget {
-  const UserInformationShimmerWidget({super.key});
+  const UserInformationShimmerWidget({super.key, required this.isInList});
+
+  final bool isInList;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      color: isInList ? AppColors.lightBlueCardColor : null,
       child: Shimmer.fromColors(
         baseColor: Colors.grey[300]!,
         highlightColor: Colors.grey[100]!,
@@ -23,7 +27,7 @@ class UserInformationShimmerWidget extends StatelessWidget {
               width: 48.0.w,
               height: 48.0.w,
             ),
-             Padding(padding: EdgeInsets.symmetric(horizontal: 8.0.w)),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 8.0.w)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,13 +37,13 @@ class UserInformationShimmerWidget extends StatelessWidget {
                     height: 8.0.h,
                     color: Colors.white,
                   ),
-                   Padding(padding: EdgeInsets.symmetric(vertical: 2.0.h)),
+                  Padding(padding: EdgeInsets.symmetric(vertical: 2.0.h)),
                   Container(
                     width: double.infinity,
                     height: 8.0.h,
                     color: Colors.white,
                   ),
-                   Padding(padding: EdgeInsets.symmetric(vertical: 2.0.h)),
+                  Padding(padding: EdgeInsets.symmetric(vertical: 2.0.h)),
                   Container(
                     width: 40.0.w,
                     height: 8.0.h,
