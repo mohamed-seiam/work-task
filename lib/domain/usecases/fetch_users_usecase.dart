@@ -10,7 +10,8 @@ class FetchUsersUseCase extends UseCase<List<UserEntity>, int> {
   FetchUsersUseCase({required this.homeRepo});
 
   @override
-  Future<Either<Failure, List<UserEntity>>> call([int param = 0]) async {
-    return await homeRepo.getUsers(skip: param);
+  Future<Either<Failure, List<UserEntity>>> call(
+      [int param = 0,]) async {
+    return await homeRepo.getUsers(skip: param,);
   }
 }

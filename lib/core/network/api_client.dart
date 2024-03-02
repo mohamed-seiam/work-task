@@ -16,9 +16,10 @@ class ApiClient {
     _dio.options.receiveTimeout = const Duration(seconds: 10);
   }
 
-  Future<Map<String, dynamic>> getUsers({int skip = 0}) async {
+  Future<Map<String, dynamic>> getUsers(
+      {int skip = 0,}) async {
     final response = await _dio.get(ApiConstants.usersEndPoint,
-        queryParameters: {'limit': 10, 'skip': skip});
+        queryParameters: {'limit':ApiConstants.paginationLimit, 'skip': skip});
     return response.data;
   }
 

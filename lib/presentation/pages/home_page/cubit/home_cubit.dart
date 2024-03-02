@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:work_task/core/network/api_constant.dart';
 import 'package:work_task/domain/usecases/fetch_users_usecase.dart';
 import 'package:work_task/domain/usecases/search_user_usecase.dart';
 import '../../../../domain/entities/user_entity.dart';
@@ -14,24 +18,57 @@ class HomeCubit extends Cubit<HomeState> {
   List<UserEntity> users = [];
   List<UserEntity> searchedUser = [];
   List<UserEntity> groupUsers = [];
+  int skipQuantity = 0;
+  bool isDataFinished = false;
 
-  Future<void> fetchUsers({int skip = 0}) async {
-    if (skip == 0) {
-      emit(FetchUsersLoading());
-    } else {
-      emit(FetchUsersLoadingFromPagination());
-    }
-    final result = await fetchUsersUseCase.call(skip);
+  // Future<void> fetchUsers({int skip = 0}) async {
+  //   if (skip == 0) {
+  //     emit(FetchUsersLoading());
+  //   } else {
+  //     emit(FetchUsersLoadingFromPagination());
+  //   }
+  //   final result = await fetchUsersUseCase.call(skip);
+  //   result.fold((failure) {
+  //     if (skip == 0) {
+  //       emit(FetchUsersFailure(error: failure.errorMsg));
+  //     } else {
+  //       emit(
+  //         FetchUsersFailureFromPagination(error: failure.errorMsg),
+  //       );
+  //     }
+  //   }, (users) {
+  //     this.users.addAll(users);
+  //     emit(FetchUsersSuccess());
+  //   });
+  // }
+
+  Future<void> fetchUsers() async {
+    emit(FetchUsersLoading());
+    final result = await fetchUsersUseCase.call(0);
     result.fold((failure) {
-      if (skip == 0) {
-        emit(FetchUsersFailure(error: failure.errorMsg));
-      } else {
-        emit(
-          FetchUsersFailureFromPagination(error: failure.errorMsg),
-        );
-      }
+      emit(FetchUsersFailure(error: failure.errorMsg));
     }, (users) {
       this.users.addAll(users);
+      emit(FetchUsersSuccess());
+    });
+  }
+
+  Future<void> fetchMoreUsers() async {
+    log(isDataFinished.toString());
+    if (isDataFinished) return;
+    skipQuantity += ApiConstants.paginationLimit;
+    emit(FetchUsersLoadingFromPagination());
+    final result = await fetchUsersUseCase.call(skipQuantity);
+    result.fold((failure) {
+      log(failure.errorMsg);
+      emit(FetchUsersFailureFromPagination(error: failure.errorMsg));
+    }, (users) {
+      log(users.toString());
+      if (users.isEmpty) {
+        isDataFinished = true;
+      } else {
+        this.users.addAll(users);
+      }
       emit(FetchUsersSuccess());
     });
   }

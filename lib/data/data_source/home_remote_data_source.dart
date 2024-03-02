@@ -17,7 +17,6 @@ class HomeRemoteDataSourceImplement implements HomeRemoteDataSource {
   Future<List<UserEntity>> fetchUsers({int skip = 0}) async {
     final response = await apiClient.getUsers(skip: skip);
     final users = UserResponseModel.fromJson(response).users;
-    print(users[0].image);
     return users;
   }
 

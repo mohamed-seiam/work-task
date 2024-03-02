@@ -27,22 +27,20 @@ class UserResponseModel {
 }
 
 class Users extends UserEntity {
-  final int id;
-  final String username;
-  final String image;
-  final String email;
+  // @override
+  // final int id;
+  // @override
+  // final String username;
+  // @override
+  // final String image;
+  // @override
+  // final String email;
 
-  Users(
-      {required this.id,
-      required this.username,
-      required this.image,
-      required this.email})
-      : super(
-          id: id,
-          username: username,
-          image: image,
-          email: email,
-        );
+ const Users(
+      {required super.id,
+      required super.username,
+      required super.image,
+      required super.email});
 
   factory Users.fromJson(Map<String, dynamic> json) {
     return Users(

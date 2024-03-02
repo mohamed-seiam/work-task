@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:work_task/presentation/pages/home_page/widgets/user_image_shimmer_widget.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/assets_manager.dart';
@@ -58,7 +59,7 @@ class UserImageWidget extends StatelessWidget {
                   imageUrl: userEntity?.image ?? '',
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
+                      const Center(child: UserImageShimmer()),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 )
               : SvgPicture.asset(AssetsManager.personIcon),

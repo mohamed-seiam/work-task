@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:work_task/presentation/pages/home_page/widgets/user_information_widget.dart';
+import 'package:work_task/presentation/pages/home_page/widgets/user_information_shimmer_widget.dart';
 
 import '../../../../domain/entities/user_entity.dart';
 import '../cubit/home_cubit.dart';
@@ -28,14 +31,9 @@ class _UsersListViewState extends State<UsersListView> {
   }
 
   void _scrollListener() async {
-    var currentPosition = _scrollController.position.pixels;
-    var maxScrollLenght = _scrollController.position.maxScrollExtent;
-    if (currentPosition >= 0.7 * maxScrollLenght) {
-      if (!isLoading) {
-        isLoading = false;
-        await BlocProvider.of<HomeCubit>(context)
-            .fetchUsers(skip: (nextSkip++) * 10);
-        isLoading = true;
+    if (_scrollController.position.atEdge) {
+      if (_scrollController.position.pixels != 0) {
+        await BlocProvider.of<HomeCubit>(context).fetchMoreUsers();
       }
     }
   }
@@ -48,6 +46,7 @@ class _UsersListViewState extends State<UsersListView> {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<HomeCubit>();
     return BlocConsumer<HomeCubit, HomeState>(
       buildWhen: (previous, current) {
         return current is FetchUsersSuccess ||
@@ -59,20 +58,19 @@ class _UsersListViewState extends State<UsersListView> {
             current is FetchUsersFailure;
       },
       listener: (context, state) {
-        // final cubit = context.read<HomeCubit>();
-        // if (state is FetchUsersSuccess) {
-        //   users.addAll(cubit.users);
-        //   tester = users;
-        // }
-        // if (state is SearchUserSuccess) {
-        //   users = cubit.searchedUser;
-        // }
-        // if (state is ClearSearchingList) {
-        //   users = tester;
-        // }
+        if (cubit.isDataFinished) {
+          Fluttertoast.showToast(
+            msg: "No More Users",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 12.0.sp,
+          );
+        }
       },
       builder: (context, state) {
-        final cubit = context.read<HomeCubit>();
         if (state is FetchUsersSuccess ||
             state is FetchUsersFailureFromPagination ||
             state is FetchUsersLoadingFromPagination ||
@@ -100,8 +98,14 @@ class _UsersListViewState extends State<UsersListView> {
             child: Text('Not found User with this name'),
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Expanded(
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return const UserInformationShimmerWidget();
+              },
+            ),
           );
         }
       },
