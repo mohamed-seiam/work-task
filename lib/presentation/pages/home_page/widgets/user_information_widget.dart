@@ -41,7 +41,7 @@ class UserInformationWidget extends StatelessWidget {
           child: Row(
             children: [
               UserImageWidget(isAdded: false, userEntity: userEntity),
-              SizedBox(width: 4.w),
+              horizontalSpacing(4),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

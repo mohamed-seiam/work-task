@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:work_task/core/helper/spacing.dart';
 import 'package:work_task/core/theme/app_colors.dart';
+import 'package:work_task/presentation/pages/home_page/widgets/user_image_shimmer_widget.dart';
 
 class UserInformationShimmerWidget extends StatelessWidget {
   const UserInformationShimmerWidget({super.key, required this.isInList});
@@ -11,39 +13,38 @@ class UserInformationShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-      color: isInList ? AppColors.lightBlueCardColor : null,
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      margin: EdgeInsets.symmetric(vertical: 5.h),
+      decoration: BoxDecoration(
+        color:  AppColors.lightBlueCardColor,
+        borderRadius: BorderRadius.circular(7.r), // Rounded corners
+      ),
       child: Shimmer.fromColors(
         baseColor: Colors.grey[300]!,
         highlightColor: Colors.grey[100]!,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14.r),
-                color: Colors.white,
-              ),
-              width: 48.0.w,
-              height: 48.0.w,
-            ),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 8.0.w)),
+            const UserImageShimmer(),
+            horizontalSpacing(4),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     width: double.infinity,
                     height: 8.0.h,
                     color: Colors.white,
                   ),
-                  Padding(padding: EdgeInsets.symmetric(vertical: 2.0.h)),
+                  verticalSpacing(4),
                   Container(
                     width: double.infinity,
                     height: 8.0.h,
                     color: Colors.white,
                   ),
-                  Padding(padding: EdgeInsets.symmetric(vertical: 2.0.h)),
+                  verticalSpacing(4),
                   Container(
                     width: 40.0.w,
                     height: 8.0.h,
@@ -56,10 +57,7 @@ class UserInformationShimmerWidget extends StatelessWidget {
             SizedBox(
               width: 48.0.w,
               height: 48.0.w,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.add, color: Colors.white)],
-              ),
+              child: const Center(child: Icon(Icons.add, color: Colors.white)),
             ),
           ],
         ),
