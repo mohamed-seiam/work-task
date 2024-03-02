@@ -16,9 +16,12 @@ class UserInformationShimmerWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14.r),
+                color: Colors.white,
+              ),
               width: 48.0.w,
               height: 48.0.w,
-              color: Colors.white,
             ),
              Padding(padding: EdgeInsets.symmetric(horizontal: 8.0.w)),
             Expanded(

@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meta/meta.dart';
 import 'package:work_task/core/network/api_constant.dart';
 import 'package:work_task/domain/usecases/fetch_users_usecase.dart';
@@ -21,27 +23,6 @@ class HomeCubit extends Cubit<HomeState> {
   int skipQuantity = 0;
   bool isDataFinished = false;
 
-  // Future<void> fetchUsers({int skip = 0}) async {
-  //   if (skip == 0) {
-  //     emit(FetchUsersLoading());
-  //   } else {
-  //     emit(FetchUsersLoadingFromPagination());
-  //   }
-  //   final result = await fetchUsersUseCase.call(skip);
-  //   result.fold((failure) {
-  //     if (skip == 0) {
-  //       emit(FetchUsersFailure(error: failure.errorMsg));
-  //     } else {
-  //       emit(
-  //         FetchUsersFailureFromPagination(error: failure.errorMsg),
-  //       );
-  //     }
-  //   }, (users) {
-  //     this.users.addAll(users);
-  //     emit(FetchUsersSuccess());
-  //   });
-  // }
-
   Future<void> fetchUsers() async {
     emit(FetchUsersLoading());
     final result = await fetchUsersUseCase.call(0);
@@ -55,7 +36,18 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> fetchMoreUsers() async {
     log(isDataFinished.toString());
-    if (isDataFinished) return;
+    if (isDataFinished) {
+      Fluttertoast.showToast(
+        msg: "No More Users",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.white,
+        textColor: Colors.black,
+        fontSize: 12.0.sp,
+      );
+      return;
+    }
     skipQuantity += ApiConstants.paginationLimit;
     emit(FetchUsersLoadingFromPagination());
     final result = await fetchUsersUseCase.call(skipQuantity);

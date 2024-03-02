@@ -1,11 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:work_task/presentation/pages/home_page/widgets/user_information_widget.dart';
 import 'package:work_task/presentation/pages/home_page/widgets/user_information_shimmer_widget.dart';
 
-import '../../../../domain/entities/user_entity.dart';
 import '../cubit/home_cubit.dart';
 
 class UsersListView extends StatefulWidget {
@@ -18,11 +17,7 @@ class UsersListView extends StatefulWidget {
 }
 
 class _UsersListViewState extends State<UsersListView> {
-  List<UserEntity> users = [];
-  List<UserEntity> tester = [];
   final ScrollController _scrollController = ScrollController();
-  int nextSkip = 1;
-  bool isLoading = false;
 
   @override
   void initState() {
@@ -47,7 +42,7 @@ class _UsersListViewState extends State<UsersListView> {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<HomeCubit>();
-    return BlocConsumer<HomeCubit, HomeState>(
+    return BlocBuilder<HomeCubit, HomeState>(
       buildWhen: (previous, current) {
         return current is FetchUsersSuccess ||
             current is FetchUsersFailureFromPagination ||
@@ -57,20 +52,8 @@ class _UsersListViewState extends State<UsersListView> {
             current is EmptyResultSearchList ||
             current is FetchUsersFailure;
       },
-      listener: (context, state) {
-        if (cubit.isDataFinished) {
-          Fluttertoast.showToast(
-            msg: "No More Users",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.white,
-            textColor: Colors.black,
-            fontSize: 12.0.sp,
-          );
-        }
-      },
       builder: (context, state) {
+        final isFetchingMore = state is FetchUsersLoadingFromPagination;
         if (state is FetchUsersSuccess ||
             state is FetchUsersFailureFromPagination ||
             state is FetchUsersLoadingFromPagination ||
@@ -80,12 +63,16 @@ class _UsersListViewState extends State<UsersListView> {
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               controller: _scrollController,
-              itemCount: cubit.displayedUsers.length,
+              itemCount: cubit.displayedUsers.length + (isFetchingMore ? 1 : 0),
               itemBuilder: (context, index) {
-                final userEntity = cubit.displayedUsers[index];
-                return UserInformationWidget(
-                  userEntity: userEntity,
-                );
+                if (index >= cubit.displayedUsers.length) {
+                  return _buildLoadingIndicator();
+                } else {
+                  final userEntity = cubit.displayedUsers[index];
+                  return UserInformationWidget(
+                    userEntity: userEntity,
+                  );
+                }
               },
             ),
           );
@@ -110,5 +97,13 @@ class _UsersListViewState extends State<UsersListView> {
         }
       },
     );
+  }
+
+  UserInformationShimmerWidget _buildLoadingIndicator() {
+     Timer(const Duration(milliseconds: 30), () {
+      _scrollController
+          .jumpTo(_scrollController.position.maxScrollExtent);
+    });
+    return const UserInformationShimmerWidget();
   }
 }

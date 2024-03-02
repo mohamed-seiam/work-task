@@ -7,7 +7,6 @@ import 'package:work_task/core/theme/app_colors.dart';
 import 'package:work_task/presentation/pages/home_page/cubit/home_cubit.dart';
 import 'package:work_task/presentation/pages/home_page/widgets/group_listview_widget.dart';
 import 'package:work_task/presentation/pages/home_page/widgets/text_form_search_widget.dart';
-import 'package:work_task/presentation/pages/home_page/widgets/user_information_shimmer_widget.dart';
 import 'package:work_task/presentation/pages/home_page/widgets/users_list_view.dart';
 
 class HomeView extends StatelessWidget {
@@ -38,15 +37,6 @@ class HomeView extends StatelessWidget {
                 const TextFormSearchWidget(),
                 verticalSpacing(16),
                 const UsersListView(),
-                BlocBuilder<HomeCubit, HomeState>(
-                  builder: (context, state) {
-                    if (state is FetchUsersLoadingFromPagination) {
-                      return const UserInformationShimmerWidget();
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
               ],
             ),
           ),
